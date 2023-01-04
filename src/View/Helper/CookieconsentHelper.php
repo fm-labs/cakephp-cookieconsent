@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Cookieconsent\View\Helper;
 
-use Cake\Utility\Text;
 use Cake\View\Helper;
 
 /**
@@ -13,13 +12,15 @@ use Cake\View\Helper;
  */
 class CookieconsentHelper extends Helper
 {
+    public $helpers = ['Html'];
+
     /**
      * Default configuration.
      *
      * @var array<string, mixed>
      */
     protected $_defaultConfig = [
-        'autoRender' => true,
+        //'autoRender' => false,
         'palette' => [
             'popup' => ['background' => '#edeff5', 'text' => '#838391'],
             'button' => ['background' => '#4b81e8']
@@ -31,19 +32,27 @@ class CookieconsentHelper extends Helper
         'law' => ['countryCode' => 'AT', 'regionalLaw' => true],
         'location' => false,
         'content' => [
-            'header' => '',
-            'message' => '',
-            'dismiss' => '',
-            'link' => '',
-            'href' => '',
+            'header' => 'Diese Webseite benutzt Cookies.',
+            'message' => 'Diese Webseite benutzt Cookies um Ihnen die bestmögliche Nutzung unserer Services zu ermöglichen.',
+            'dismiss' => 'Verstanden',
+            'link' => 'Datenschutzerklärung',
+            'href' => '/datenschutz',
         ],
         'cookie' => [
             'name' => 'cookie_law',
-            'path' => '',
-            'domain' => '',
+            'path' => '/',
+            //'domain' => null,
             'expiryDays' => 365,
         ]
     ];
+
+    public function initialize(array $config): void
+    {
+        parent::initialize($config);
+
+        $this->Html->css('Cookieconsent.cookieconsent.min.css', ['block' => 'css']);
+        $this->Html->script('Cookieconsent.cookieconsent.min.js', ['block' => 'script']);
+    }
 
     public function render() {
         $scriptTemplate = <<<SCRIPT
