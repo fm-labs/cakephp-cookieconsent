@@ -1,0 +1,36 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2023-01-04 20:30+0000\n"
+"PO-Revision-Date: 2023-01-04 21:53+0100\n"
+"Last-Translator: \n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#: mnt/DATA/workspaces/php/cakephp-cookieconsent/src/View/Helper/CookieconsentHelper.php:57
+msgid "Cookie consent"
+msgstr "Cookie Zustimmung"
+
+#: mnt/DATA/workspaces/php/cakephp-cookieconsent/src/View/Helper/CookieconsentHelper.php:58
+msgid ""
+"This website uses cookies to provide a better user experience of our "
+"services."
+msgstr ""
+"Diese Webseite benutzt Cookies um Ihnen die bestmögliche Nutzung "
+"unserer Services zu ermöglichen."
+
+#: mnt/DATA/workspaces/php/cakephp-cookieconsent/src/View/Helper/CookieconsentHelper.php:59
+msgid "I agree"
+msgstr "Verstanden"
+
+#: mnt/DATA/workspaces/php/cakephp-cookieconsent/src/View/Helper/CookieconsentHelper.php:60
+msgid "Privacy terms"
+msgstr "Datenschutz"
