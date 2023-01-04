@@ -1,0 +1,25 @@
+{
+  "name": "fm-labs/cakephp-cookieconsent",
+  "description": "Cookie consent plugin for CakePHP",
+  "type": "cakephp-plugin",
+    "license": "MIT",
+  "require": {
+    "php": ">=7.2",
+    "cakephp/cakephp": "^4.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Cake\\": "./vendor/cakephp/cakephp",
+      "Cookieconsent\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
+      "Cookieconsent\\Test\\": "tests"
+    }
+  }
+}
