@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Cookieconsent\View\Helper;
 
 use Cake\Core\Configure;
+use Cake\Event\EventInterface;
 use Cake\Utility\Hash;
 use Cake\View\Helper;
 use Cake\View\View;
@@ -23,7 +24,7 @@ class CookieconsentHelper extends Helper
      * @var array<string, mixed>
      */
     protected $_defaultConfig = [
-        //'autoRender' => false,
+        'autoRender' => true,
         'palette' => [
             'popup' => ['background' => '#edeff5', 'text' => '#838391'],
             'button' => ['background' => '#4b81e8']
@@ -34,13 +35,13 @@ class CookieconsentHelper extends Helper
         'autoOpen' => true,
         'law' => ['countryCode' => 'AT', 'regionalLaw' => true],
         'location' => false,
-//        'content' => [
-//            'header' => 'Cookie consent',
-//            'message' => 'This website uses cookies.',
-//            'dismiss' => 'I agree',
-//            'link' => 'Privacy terms',
-//            'href' => '/privacy',
-//        ],
+        'content' => [
+            'header' => 'Cookie consent',
+            'message' => 'This website uses cookies.',
+            'dismiss' => 'I agree',
+            'link' => 'Privacy terms',
+            'href' => '/privacy',
+        ],
         'cookie' => [
             'name' => 'cookie_law',
             'path' => '/',
@@ -49,10 +50,15 @@ class CookieconsentHelper extends Helper
         ]
     ];
 
+    /**
+     * @var bool
+     */
+    protected bool $_autoRender = false;
+
     public function __construct(View $view, array $config = [])
     {
         // i18n default config
-        $config = Hash::merge([
+        $defaultI18nConfig = [
             'content' => [
                 'header' => __d('cookieconsent', 'Cookie consent'),
                 'message' => __d('cookieconsent', 'This website uses cookies to provide a better user experience of our services.'),
@@ -60,29 +66,83 @@ class CookieconsentHelper extends Helper
                 'link' => __d('cookieconsent', 'Privacy terms'),
                 'href' => '/privacy',
             ],
-        ], $config);
-        parent::__construct($view, $config);
-    }
+        ];
 
-    public function initialize(array $config): void
-    {
+        $this->_defaultConfig = Hash::merge($this->_defaultConfig, $defaultI18nConfig, Configure::read('Cookieconsent'));
+
+        parent::__construct($view, $config);
+
         // config override
-        if (!Configure::check('Cookieconsent')) {
+        if (Configure::check('Cookieconsent')) {
             $this->setConfig(Configure::read('Cookieconsent'));
         }
+    }
 
+    /**
+     * @param array $config
+     * @return void
+     */
+    public function initialize(array $config): void
+    {
         // load osana/cookieconsent libs
         $this->Html->css('Cookieconsent.cookieconsent.min.css', ['block' => 'css']);
         $this->Html->script('Cookieconsent.cookieconsent.min.js', ['block' => 'script']);
     }
 
     /**
+     * @param string $value
+     * @return $this
+     */
+    public function setHeader(string $value): static
+    {
+        $this->setConfig(['content' => ['header' => $value]]);
+
+        return $this;
+    }
+
+    /**
+     * @param string $value
+     * @return $this
+     */
+    public function setMessage(string $value): static
+    {
+        $this->setConfig(['content' => ['message' => $value]]);
+
+        return $this;
+    }
+
+    /**
+     * @param string $title
+     * @param $url
+     * @return $this
+     */
+    public function setLink(string $title, $url): static
+    {
+        $url = $this->Html->Url->build($url);
+        $this->setConfig(['content' => ['link' => $title, 'href' => $url]]);
+
+        return $this;
+    }
+
+    /**
+     * @param string $value
+     * @return $this
+     */
+    public function setDismiss(string $value): static
+    {
+        $this->setConfig(['content' => ['dismiss' => $value]]);
+
+        return $this;
+    }
+
+    /**
      * Render cookie consent script block
      * and return result.
      *
+     * @param array $config
      * @return string
      */
-    public function render(): string {
+    public function render(array $config = []): string {
         $scriptTemplate = <<<SCRIPT
     if (typeof window.cookieconsent !== "undefined") {
         window.cookieconsent.initialise(%s);
@@ -92,7 +152,26 @@ class CookieconsentHelper extends Helper
         };
     } else { console.warn("cookieconsent lib not loaded"); }
 SCRIPT;
-        $script = sprintf($scriptTemplate, json_encode($this->getConfig()));
+        $_config = array_merge($this->getConfig(), $config);
+        unset($_config['autoRender']);
+
+        $script = sprintf($scriptTemplate, json_encode($_config));
+
         return $this->Html->scriptBlock($script);
+    }
+
+    /**
+     * @param EventInterface $event
+     * @return void
+     */
+    public function beforeLayout(EventInterface $event): void
+    {
+        if ($this->getConfig('autoRender')) {
+            /** @var \Cake\View\View $view */
+            $view = $event->getSubject();
+
+            $html = $this->render();
+            $view->append('script', $html);
+        }
     }
 }
