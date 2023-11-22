@@ -14,7 +14,7 @@ https://github.com/osano/cookieconsent
 
 ## Usage
 
-```php 
+```php
 // Enable plugin in Application's boostrap method
 public function bootstrap() {
     // ... other boootstrap code
@@ -25,10 +25,10 @@ public function bootstrap() {
 ### Use helper in layout templates
 
 
-```php 
+```php
 // Example layout template
 <?php
-$this->loadHelper('Cookieconsent.Cookieconsent');
+$this->loadHelper('Cookieconsent.Cookieconsent', ['autoRender' => false]);
 ?>
 <html>
     <body>
@@ -41,8 +41,9 @@ $this->loadHelper('Cookieconsent.Cookieconsent');
 ## Configuration
 
 ```php
-$this->loadHelper('Cookieconsent', [
+$this->loadHelper('Cookieconsent.Cookieconsent', [
         'autoRender' => true,
+        'block' => 'cookieconsent',
         'palette' => [
             'popup' => ['background' => '#edeff5', 'text' => '#838391'],
             'button' => ['background' => '#4b81e8']
